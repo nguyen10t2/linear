@@ -3,11 +3,11 @@
 #include <string>
 
 
-class stack
+template <typename type> class stack
 {
     struct Node
     {
-        int data;
+        type data;
         struct Node *next;
         struct Node *prev;
     };
@@ -18,7 +18,7 @@ private:
     struct Node *lastNode = head;
 
 public:
-    struct Node *createNode(int data)
+    struct Node *createNode(type data)
     {
         struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
         newNode->data = data;
@@ -26,7 +26,7 @@ public:
         newNode->prev = NULL;
         return newNode;
     }
-    void push(int data)
+    void push(type data)
     {
         if (head == NULL)
         {
@@ -49,7 +49,7 @@ public:
         lastNode = temp;
         --leng;
     }
-    int front()
+    type front()
     {
         return lastNode->data;
     }
@@ -75,11 +75,11 @@ public:
             return false;
     }
 };
-class queue
+template <typename type> class queue
 {
     struct Node
     {
-        std::string data;
+        type data;
         struct Node *next;
         struct Node *prev;
     };
@@ -90,7 +90,7 @@ class queue
         struct Node *lastNode = head;
 
     public:
-        struct Node *createNode(std::string data)
+        struct Node *createNode(type data)
         {
             struct Node *newNode = new Node();
             newNode->data = data;
@@ -98,7 +98,7 @@ class queue
             newNode->prev = NULL;
             return newNode;
         }
-        void push(std::string data)
+        void push(type data)
         {
             if (head == NULL)
             {
@@ -121,7 +121,7 @@ class queue
             free(temp);
             --leng;
         }
-        std::string front()
+        type front()
         {
             if (head == NULL)
                 return "";
@@ -149,7 +149,7 @@ class queue
 };
 int main()
 {
-    queue p;
+    queue<std::string> p;
     int n;
     std::cin >> n;
     std::string bin[n + 1];

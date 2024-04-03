@@ -1,7 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <string>
-
+#include <string.h>
 template <typename type>
 class stack
 {
@@ -43,6 +43,14 @@ public:
     }
     void pop()
     {
+        if(head == NULL) return;
+        if(head->next == NULL)
+        {
+            struct Node* temp = head->next;
+            head = NULL;
+            free(temp);
+            return;
+        }
         struct Node *temp = lastNode->prev;
         lastNode->prev->next = NULL;
         free(lastNode);
@@ -117,6 +125,7 @@ public:
     }
     void pop()
     {
+        if(head == NULL) return;
         struct Node *temp = head;
         head = head->next;
         if (head == NULL)
@@ -200,6 +209,14 @@ public:
         ++leng;
     }
     void pop_back(){
+        if(head == NULL) return;
+        if(head->next == NULL)
+        {
+            struct Node* temp = head;
+            head = NULL;
+            free(temp);
+            return;
+        }
         struct Node *temp = lastNode->prev;
         lastNode->prev->next = NULL;
         free(lastNode);
@@ -207,6 +224,7 @@ public:
         --leng;
     }
     void pop_front(){
+        if(head == NULL) return;
         struct Node* temp = head;
         head = head->next;
         if(head == NULL)
@@ -244,7 +262,44 @@ public:
     }
 };
 
+int isValidHTMLTags(char* html, stack<char*> p) {
+    // Duyệt qua từng ký tự trong chuỗi HTML
+    char* token = strtok(html, ">"), * subToken;
+    while (token != NULL) {
+        subToken = strchr(token, '<');
+        if (subToken == NULL) return 0;
+        subToken++;
+        // Nếu token là thẻ mở, thêm nó vào Stack
+        if (subToken[0] != '/') {
+            p.push(subToken);
+            printf("push %s\n", subToken);
+        }
+        // Nếu token là thẻ đóng
+        else if (subToken[0] == '/') {
+            // Kiểm tra xem Stack có rỗng không
+            if (p.empty()) {
+                return 0;
+            }
+            // Lấy thẻ mở khỏi Stack và so sánh tên thẻ
+            char* openTag = p.front();
+            p.pop();
+            printf("Pop %s\n", openTag);
+            if (openTag == NULL || strcmp(openTag, subToken+1) != 0) {
+                return 0;
+            }
+        }
+        token = strtok(NULL, ">");
+    }
+
+    // Nếu Stack còn phần tử sau khi duyệt xong, thì các thẻ HTML không hợp lệ
+    if (p.empty()) {
+        return 0;
+    }
+    return 1;
+}
 int main()
 {
-    
+    stack<char*> p;
+    char s[] = "<div><p>Hello, world!</p></div>";
+    std::cout<<isValidHTMLTags(s, p);
 }
